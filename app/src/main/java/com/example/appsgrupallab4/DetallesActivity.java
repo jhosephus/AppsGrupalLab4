@@ -26,8 +26,26 @@ public class DetallesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalles);
-        Post p = (new Post()); // RECIBO EL POST DESDE EL MAIN.
-        crearRecyclerView((Post) p);
+        
+        
+
+        //https://stackoverflow.com/questions/2736389/how-to-pass-an-object-from-one-activity-to-another-on-android
+        // https://docs.google.com/presentation/d/1DxqH1h0RObwFGQYW4d2664IV-pE5GsgceXJps71-g6A/edit#slide=id.g73bffae9ff_0_88
+
+        Intent intent = getIntent();
+        post = (Post) ((Intent) getInent()).getSerializable("post"); 
+        
+        crearRecyclerView((Post) post);
+
+        findViewById(R.id.agregarComentarioDetalles).setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DetallesActivity.this, AgregarComentario.class);
+                intent.putExtra("post", post);
+               
+            }
+        });
+
 
     }
 
