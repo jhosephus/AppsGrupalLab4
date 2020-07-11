@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "790589474423",
+    "firebase_url": "https://appsgrupallab4.firebaseio.com",
+    "project_id": "appsgrupallab4",
+    "storage_bucket": "appsgrupallab4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:790589474423:android:3d4eb105dd226cead9a872",
+        "android_client_info": {
+          "package_name": "com.example.appsgrupallab4"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "790589474423-qmgrd14tgm0tclrcp8m911vbboqj5dmv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0FM-F5PxYU1rigs_e7csDV43BJ_yrl3Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "790589474423-qmgrd14tgm0tclrcp8m911vbboqj5dmv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
