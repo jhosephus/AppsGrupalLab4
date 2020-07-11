@@ -2,12 +2,19 @@ package com.example.appsgrupallab4;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -38,6 +45,7 @@ public class SubirFoto extends AppCompatActivity {
 
     private boolean isFoto = false;
     private boolean isTexto = false;
+    private ActionBar actionBar;
 
     //Form
     private EditText descripcion;
@@ -61,6 +69,10 @@ public class SubirFoto extends AppCompatActivity {
     }
 
     public void setActivity() {
+
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("Daniel");
 
         descripcion = findViewById(R.id.SubirFoto_Descripcion);
         galeria = findViewById(R.id.SubirFoto_Galeria);
@@ -95,8 +107,13 @@ public class SubirFoto extends AppCompatActivity {
 
         isTexto = !descripcion.getText().toString().isEmpty();
 
-        if (isTexto && isFoto){
-            uploadInfo();
+        if (isInternetAvailable()){
+            if (isTexto && isFoto){
+                uploadInfo();
+            }
+        }
+        else {
+            Toast.makeText(SubirFoto.this, "Sin Internet", Toast.LENGTH_LONG).show();
         }
 
     }
@@ -189,6 +206,39 @@ public class SubirFoto extends AppCompatActivity {
                         });
             }
         });
+    }
+
+    public boolean isInternetAvailable() {
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if (connectivityManager == null) return false;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            Network networks = connectivityManager.getActiveNetwork();
+            if (networks == null) return false;
+
+            NetworkCapabilities networkCapabilities = connectivityManager.getNetworkCapabilities(networks);
+            if (networkCapabilities == null) return false;
+
+            if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) return true;
+            if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) return true;
+            if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) return true;
+            return false;
+
+
+        }
+        else {
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            if (activeNetworkInfo == null) return false;
+
+            if (activeNetworkInfo.getType() == ConnectivityManager.TYPE_WIFI) return true;
+            if (activeNetworkInfo.getType() == ConnectivityManager.TYPE_MOBILE) return true;
+            if (activeNetworkInfo.getType() == ConnectivityManager.TYPE_ETHERNET) return true;
+            return true;
+        }
+
+
     }
 
 }
