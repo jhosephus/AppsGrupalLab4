@@ -13,4 +13,84 @@
     Agregar comentarios
     -->
 
+    <TextView
+        android:id="@+id/userNameDetalles"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/textview"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.487"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.053" />
+
+    <ImageView
+        android:id="@+id/imageDetalles"
+        android:layout_width="129dp"
+        android:layout_height="177dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userNameDetalles"
+        app:layout_constraintVertical_bias="0.062"
+        android:contentDescription="@string/todo" />
+
+    <TextView
+        android:id="@+id/dateDetalles"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/textview"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.487"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageDetalles"
+        app:layout_constraintVertical_bias="0.118" />
+
+    <TextView
+        android:id="@+id/cantidadComentariosDetalles"
+        android:layout_width="184dp"
+        android:layout_height="28dp"
+        android:layout_marginBottom="92dp"
+        android:text="@string/textview"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dateDetalles"
+        app:layout_constraintVertical_bias="0.046" />
+
+    <TextView
+        android:id="@+id/descripcionDetalles"
+        android:layout_width="184dp"
+        android:layout_height="28dp"
+        android:layout_marginBottom="92dp"
+        android:text="@string/textview"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cantidadComentariosDetalles"
+        app:layout_constraintVertical_bias="0.167" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerComentariosDetalles"
+        android:layout_width="fill_parent"
+        android:layout_height="101dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/descripcionDetalles"
+        app:layout_constraintVertical_bias="0.238" />
+
+    <Button
+        android:id="@+id/agregarComentarioDetalles"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerComentariosDetalles" />
 </androidx.constraintlayout.widget.ConstraintLayout>

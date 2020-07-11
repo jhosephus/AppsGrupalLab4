@@ -46,7 +46,6 @@ public class DetallesActivity extends AppCompatActivity {
                                 Log.d("msgxd", document.getId() + " => " + document.getData());
                                 Comentario c = document.toObject(Comentario.class);
                                 listaComentarios.add(c);
-
                             }
                             callback.onSuccess(listaComentarios);
                         } else {
@@ -55,5 +54,10 @@ public class DetallesActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+
+    public void getPostInfo(){
+
     }
 }
