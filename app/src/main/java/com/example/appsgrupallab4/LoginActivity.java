@@ -108,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void updateUI() {
         Log.d("msgxd", "Logueandose ... ");
-        startActivity(new Intent(LoginActivity.this, SubirFoto.class));
+        startActivity(new Intent(LoginActivity.this, AgregarComentario.class));
 
     }
 }
