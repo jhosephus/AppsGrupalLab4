@@ -1,9 +1,18 @@
 package com.example.appsgrupallab4.entidades;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Post {
+public class Post implements Serializable {
+
+    private String postId;
+    private String nombreUser;
+    private String userUID;
+    private Date date;
+    private String descripcion;
+    private ArrayList<Comentario> comment;
+
 
     public String getPostId() {
         return postId;
@@ -46,13 +55,6 @@ public class Post {
     }
 
 
-
-    private String postId;
-    private String nombreUser;
-    private String userUID;
-    private Date date;
-    private String descripcion;
-
     public ArrayList<Comentario> getComment() {
         return comment;
     }
@@ -60,8 +62,6 @@ public class Post {
     public void setComment(ArrayList<Comentario> comment) {
         this.comment = comment;
     }
-
-    private ArrayList<Comentario> comment;
 
 
 }
