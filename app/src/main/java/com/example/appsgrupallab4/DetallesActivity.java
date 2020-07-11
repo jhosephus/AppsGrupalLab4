@@ -48,7 +48,7 @@ public class DetallesActivity extends AppCompatActivity {
                                 listaComentarios.add(c);
 
                             }
-                            callback(listaComentarios);
+                            callback.onSuccess(listaComentarios);
                         } else {
                             Log.d("msgxd", "Error getting documents: ", task.getException());
 
