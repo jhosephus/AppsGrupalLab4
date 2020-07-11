@@ -83,19 +83,19 @@ public class SubirFoto extends AppCompatActivity {
 
     }
 
-    public void cargarGaleria () {
-        Intent intent=new Intent(Intent.ACTION_PICK);
+    public void cargarGaleria() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         String[] mimeTypes = {"image/jpeg", "image/png"};
-        intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
-        startActivityForResult(intent,GALLERY_REQUEST_CODE);
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+        startActivityForResult(intent, GALLERY_REQUEST_CODE);
     }
 
-    public void publicarPost () {
+    public void publicarPost() {
 
         isTexto = !descripcion.getText().toString().isEmpty();
 
-        if (isTexto && isFoto){
+        if (isTexto && isFoto) {
             uploadInfo();
         }
 
@@ -137,23 +137,23 @@ public class SubirFoto extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Toast.makeText(SubirFoto.this,"Publicado",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SubirFoto.this, "Publicado", Toast.LENGTH_SHORT).show();
                         String fotoUID;
                         //fotoUID = currentUser.getUid() +"-"+documentReference.getId();
-                        fotoUID = "1452" +"-"+documentReference.getId();
+                        fotoUID = "1452" + "-" + documentReference.getId();
                         uploadImage(fotoUID);
                     }
                 })
-        .addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(SubirFoto.this,"Ocurrio algo",Toast.LENGTH_SHORT).show();
-            }
-        });
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(SubirFoto.this, "Ocurrio algo", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
     }
 
-    private void uploadImage(final String idFoto){
+    private void uploadImage(final String idFoto) {
         storageRef = storage.getReference();
         mountainsRef = storageRef.child(idFoto + ".jpg");
         // Get the data from an ImageView as bytes
@@ -169,21 +169,21 @@ public class SubirFoto extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 // Handle unsuccessful uploads
-                Toast.makeText(SubirFoto.this,"Fail",Toast.LENGTH_LONG).show();
+                Toast.makeText(SubirFoto.this, "Fail", Toast.LENGTH_LONG).show();
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Map<String,Object> infoFoto = new HashMap<>();
+                Map<String, Object> infoFoto = new HashMap<>();
                 infoFoto.put("idFoto", idFoto);
                 db.collection("incidencias").document(idFoto)
                         .update(infoFoto)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Toast.makeText(SubirFoto.this,"Success",Toast.LENGTH_LONG).show();
+                                Toast.makeText(SubirFoto.this, "Success", Toast.LENGTH_LONG).show();
                                 Intent intent = new Intent();
-                                setResult(RESULT_OK,intent);
+                                setResult(RESULT_OK, intent);
                                 //finish();
                             }
                         });
