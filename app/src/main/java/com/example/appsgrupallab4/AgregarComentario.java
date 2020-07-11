@@ -59,7 +59,7 @@ public class AgregarComentario extends AppCompatActivity {
         String texto = comentario.getText().toString();
 
         Map<String, Object> comentarioData = new HashMap<String, Object>();
-        comentarioData.put("time", currentTime);
+        comentarioData.put("fechaSubida", currentTime);
         comentarioData.put("nombreUser", nombre);
         comentarioData.put("contenido", texto);
         comentarioData.put("userUID", currentUser.getUid());
