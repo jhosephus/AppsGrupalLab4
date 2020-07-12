@@ -6,6 +6,8 @@ import android.os.storage.StorageManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,14 +28,18 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ImageVie
     private ArrayList<String> usuario;
     private ArrayList<String> imagen;
     private Context context;
+
+
+    private OnNoteListener onNoteListener;
     StorageReference storageReference;
     FirebaseStorage storage = FirebaseStorage.getInstance();
 
-    public RecycleAdapter(ArrayList<String> comentario, ArrayList<String> usuario, ArrayList<String> imagen, Context context) {
+    public RecycleAdapter(ArrayList<String> comentario, ArrayList<String> usuario, ArrayList<String> imagen, Context context, OnNoteListener onNoteListener) {
         this.context = context;
         this.comentario = comentario;
         this.usuario = usuario;
         this.imagen = imagen;
+        this.onNoteListener = onNoteListener;
 
     }
 
@@ -44,7 +50,7 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ImageVie
 
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.pantalla_principal, parent, false);
-        ImageViewHolder imageViewHolder = new ImageViewHolder(view);
+        ImageViewHolder imageViewHolder = new ImageViewHolder(view, onNoteListener);
         return imageViewHolder;
     }
 
@@ -70,22 +76,43 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ImageVie
 
     }
 
+    public interface OnNoteListener {
+        void onNoteClick(int position);
+
+
+    }
 
     @Override
     public int getItemCount() {
         return imagen.size();
     }
 
-    public class ImageViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageView1;
+    public class ImageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        ImageView imageView1, verdetalle;
+        Button verdetalle2;
         TextView textView1;
         TextView textView2;
+        OnNoteListener onNoteListener1;
 
-        public ImageViewHolder(@NonNull View itemView) {
+
+
+        public ImageViewHolder(@NonNull View itemView, final OnNoteListener onNoteListener) {
             super(itemView);
             imageView1 = itemView.findViewById(R.id.imageView3);
             textView1 = itemView.findViewById(R.id.textView);
             textView2 = itemView.findViewById(R.id.textView2);
+
+            verdetalle2=itemView.findViewById(R.id.button2);
+            this.onNoteListener1 = onNoteListener;
+            verdetalle2.setOnClickListener(this);
+
         }
+
+
+        @Override
+        public void onClick(View v) {
+            onNoteListener1.onNoteClick(getAdapterPosition());
+        }
+
     }
 }

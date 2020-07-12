@@ -6,10 +6,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.View;
 
 import com.example.appsgrupallab4.entidades.Post;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,10 +26,11 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.util.ArrayList;
 
-public class PaginaPrincipal extends AppCompatActivity {
+public class PaginaPrincipal extends AppCompatActivity implements RecycleAdapter.OnNoteListener {
     FirebaseStorage firebaseStorage;
     StorageReference storageReference;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+
     RecyclerView recyclerView;
     RecycleAdapter recycleAdapter;
     ArrayList<String> comentario = new ArrayList<String>();
@@ -62,9 +65,6 @@ public class PaginaPrincipal extends AppCompatActivity {
         });
 
 
-
-
-
     }
 
     public void comoseteantoje() {
@@ -77,9 +77,27 @@ public class PaginaPrincipal extends AppCompatActivity {
 
         }
 
-        recycleAdapter = new RecycleAdapter(comentario, usuario, imagen, PaginaPrincipal.this);
+        recycleAdapter = new RecycleAdapter(comentario, usuario, imagen, PaginaPrincipal.this, (RecycleAdapter.OnNoteListener) PaginaPrincipal.this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        recyclerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         recyclerView.setAdapter(recycleAdapter);
         Log.d("sais", String.valueOf(sais));
     }
+
+    @Override
+    public void onNoteClick(int position) {
+        Intent intent = new Intent(PaginaPrincipal.this, Masdetalles.class);
+        intent.putExtra("usuario", usuario.get(position));
+        intent.putExtra("imagen",imagen.get(position));
+        intent.putExtra("descripcion",comentario.get(position));
+        startActivityForResult(intent, 1);
+    }
+
+
 }
