@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.appsgrupallab4.entidades.Post;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
@@ -30,7 +31,6 @@ import java.util.Map;
 
 public class AgregarComentario extends AppCompatActivity {
 
-    private String postUID;
     private ActionBar actionBar;
 
     //Form
@@ -40,12 +40,17 @@ public class AgregarComentario extends AppCompatActivity {
     //Firebase
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseUser currentUser;
+    private String userNombre;
+    private String userUID;
+    private String postUID;
+    private Post post;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agregar_comentario);
 
+        getIntentData();
         setActivity();
     }
 
@@ -53,7 +58,7 @@ public class AgregarComentario extends AppCompatActivity {
 
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle("Daniel");
+        actionBar.setTitle(userNombre);
 
         comentario = findViewById(R.id.AgregarComentario_Comentario);
         publicar = findViewById(R.id.AgregarComentario_Publicar);
@@ -62,7 +67,9 @@ public class AgregarComentario extends AppCompatActivity {
             public void onClick(View v) {
 
                 if (isInternetAvailable()){
-                    publicarComentario();
+                    if (!comentario.getText().toString().isEmpty()){
+                        publicarComentario();
+                    }
                 }
                 else {
                     Toast.makeText(AgregarComentario.this, "Sin Internet", Toast.LENGTH_LONG).show();
@@ -71,19 +78,28 @@ public class AgregarComentario extends AppCompatActivity {
         });
     }
 
+    public void getIntentData() {
+        Intent intent = getIntent();
+        post = (Post) intent.getSerializableExtra("post");
+
+        userNombre = post.getNombreUser();
+        userUID = post.getUserUID();
+        postUID = post.getPostId();
+
+    }
+
     public void publicarComentario(){
-        String nombre = currentUser.getDisplayName();
-        //String nombre = "José";
+
         Date currentTime = Calendar.getInstance().getTime();
         String texto = comentario.getText().toString();
 
         Map<String, Object> comentarioData = new HashMap<String, Object>();
         comentarioData.put("fechaSubida", currentTime);
-        comentarioData.put("nombreUser", nombre);
+        comentarioData.put("nombreUser", userNombre);
         comentarioData.put("contenido", texto);
-        comentarioData.put("userUID", currentUser.getUid());
+        comentarioData.put("userUID", userUID);
 
-        postUID = "1cESyl9vULpKEz0wipkk";
+        //postUID = "1cESyl9vULpKEz0wipkk";
 
         db.collection("posts").document(postUID).collection("comentarios")
                 .add(comentarioData).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
