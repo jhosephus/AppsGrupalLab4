@@ -15,13 +15,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".Masdetalles"></activity>
         <activity android:name=".DetallesActivity" />
-        <activity android:name=".PaginaPrincipal">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".PaginaPrincipal"></activity>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -46,7 +40,13 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".AgregarComentario" />
         <activity android:name=".SubirFoto" />
-        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

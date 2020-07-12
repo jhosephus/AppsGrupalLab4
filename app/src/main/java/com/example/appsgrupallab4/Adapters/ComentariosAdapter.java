@@ -57,6 +57,9 @@ public class ComentariosAdapter extends RecyclerView.Adapter<ComentariosAdapter.
 
     @Override
     public int getItemCount() {
-        return listaComentarios.size();
+        if (listaComentarios != null) {
+            return listaComentarios.size();
+        }
+        return 0;
     }
 }

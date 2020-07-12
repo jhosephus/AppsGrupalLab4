@@ -4,9 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -17,12 +19,17 @@ import com.example.appsgrupallab4.Adapters.ComentariosAdapter;
 import com.example.appsgrupallab4.entidades.Comentario;
 import com.example.appsgrupallab4.entidades.Post;
 import com.google.firebase.FirebaseTooManyRequestsException;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class DetallesActivity extends AppCompatActivity {
 
@@ -44,19 +51,26 @@ public class DetallesActivity extends AppCompatActivity {
     private TextView descripcionDetalles;
     private Button agregarComentarioDetalles;
 
+    private FirebaseAuth mAuth;
+    private FirebaseUser user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalles);
+        Log.d("msgxd", "aea");
 
         //stackoverflow.com/questions/2736389/how-to-pass-an-object-from-one-activity-to-another-on-android
         // https://docs.google.com/presentation/d/1DxqH1h0RObwFGQYW4d2664IV-pE5GsgceXJps71-g6A/edit#slide=id.g73bffae9ff_0_88
 
         Intent intent = getIntent();
         post = (Post) intent.getSerializableExtra("post");
-        userId = intent.getStringExtra("userId");
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
+        userId = user.getUid();
+        //userId = intent.getStringExtra("userId");
 
-
+        Log.d("msgxd", post.getDescripcion());
         llenarCampos((Post) post);
         crearRecyclerView((Post) post);
 
@@ -66,7 +80,7 @@ public class DetallesActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(DetallesActivity.this, AgregarComentario.class);
                 intent.putExtra("post", (Serializable) post);
-                intent.putExtra("userID", userId);
+                intent.putExtra("userId", userId);
                 startActivityForResult(intent, START_ACTIVITY_CODE); // javapoint.com/android-startactivityforresult-example;
             }
         });
@@ -90,8 +104,17 @@ public class DetallesActivity extends AppCompatActivity {
 
         userNameDetalles.setText(p.getNombreUser());
         //imageDetalles.setText("");
-        dateDetalles.setText(p.getDate().toString());
-        cantidadComentariosDetalles.setText(p.getComment().size());
+
+        
+        String fechaParsed = new SimpleDateFormat("dd/MM/yyyy").format(p.getFechaSubida());
+        dateDetalles.setText(fechaParsed);
+
+        if (p.getComment() != null) {
+            cantidadComentariosDetalles.setText("Cantidad de comentarios" + p.getComment().size());
+        }else{
+            cantidadComentariosDetalles.setText("No hay comentarios");
+
+        }
         descripcionDetalles.setText(p.getDescripcion());
 
         String fileName = p.getPostId() + ".jpg";

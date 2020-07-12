@@ -73,8 +73,6 @@ public class PaginaPrincipal extends AppCompatActivity implements RecycleAdapter
             imagen.add(posts.get(i).getUserUID() + "-" + posts.get(i).getPostId());
             usuario.add(posts.get(i).getUserUID());
             comentario.add(posts.get(i).getDescripcion());
-
-
         }
 
         recycleAdapter = new RecycleAdapter(comentario, usuario, imagen, PaginaPrincipal.this, (RecycleAdapter.OnNoteListener) PaginaPrincipal.this);
@@ -92,11 +90,15 @@ public class PaginaPrincipal extends AppCompatActivity implements RecycleAdapter
 
     @Override
     public void onNoteClick(int position) {
-        Intent intent = new Intent(PaginaPrincipal.this, Masdetalles.class);
-        intent.putExtra("usuario", usuario.get(position));
+        Intent intent = new Intent(PaginaPrincipal.this, DetallesActivity.class);
+        intent.putExtra("post", posts.get(position));
+
+        /*intent.putExtra("usuario", usuario.get(position));
         intent.putExtra("imagen",imagen.get(position));
         intent.putExtra("descripcion",comentario.get(position));
+        */
         startActivityForResult(intent, 1);
+
     }
 
 

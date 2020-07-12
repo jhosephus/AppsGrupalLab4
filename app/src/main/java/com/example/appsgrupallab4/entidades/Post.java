@@ -1,5 +1,7 @@
 package com.example.appsgrupallab4.entidades;
 
+import com.google.firebase.Timestamp;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,10 +11,10 @@ public class Post implements Serializable {
     private String postId;
     private String nombreUser;
     private String userUID;
-    private Date date;
+    private Date fechaSubida;
+    private String stringDate;
     private String descripcion;
     private ArrayList<Comentario> comment;
-
 
     public String getPostId() {
         return postId;
@@ -38,12 +40,20 @@ public class Post implements Serializable {
         this.userUID = userUID;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getFechaSubida() {
+        return fechaSubida;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setFechaSubida(Date date) {
+        this.fechaSubida = date;
+    }
+
+    public String getStringDate() {
+        return stringDate;
+    }
+
+    public void setStringDate(String stringDate) {
+        this.stringDate = stringDate;
     }
 
     public String getDescripcion() {
@@ -54,7 +64,6 @@ public class Post implements Serializable {
         this.descripcion = descripcion;
     }
 
-
     public ArrayList<Comentario> getComment() {
         return comment;
     }
@@ -62,6 +71,4 @@ public class Post implements Serializable {
     public void setComment(ArrayList<Comentario> comment) {
         this.comment = comment;
     }
-
-
 }
