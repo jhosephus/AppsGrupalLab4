@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
@@ -18,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.example.appsgrupallab4.Adapters.ComentariosAdapter;
 import com.example.appsgrupallab4.entidades.Comentario;
 import com.example.appsgrupallab4.entidades.Post;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -36,6 +38,8 @@ public class DetallesActivity extends AppCompatActivity {
     final int START_ACTIVITY_CODE = 2;
     private FirebaseFirestore fireStore;
     private StorageReference storageReference;
+    FirebaseStorage storage;
+
 
     private ArrayList<Comentario> listaComentarios;
     private RecyclerView rv;
@@ -54,11 +58,16 @@ public class DetallesActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser user;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalles);
         Log.d("msgxd", "aea");
+
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+
 
         //stackoverflow.com/questions/2736389/how-to-pass-an-object-from-one-activity-to-another-on-android
         // https://docs.google.com/presentation/d/1DxqH1h0RObwFGQYW4d2664IV-pE5GsgceXJps71-g6A/edit#slide=id.g73bffae9ff_0_88
@@ -105,26 +114,34 @@ public class DetallesActivity extends AppCompatActivity {
         userNameDetalles.setText(p.getNombreUser());
         //imageDetalles.setText("");
 
-        
+
         String fechaParsed = new SimpleDateFormat("dd/MM/yyyy").format(p.getFechaSubida());
         dateDetalles.setText(fechaParsed);
 
         if (p.getComment() != null) {
             cantidadComentariosDetalles.setText("Cantidad de comentarios" + p.getComment().size());
-        }else{
+        } else {
             cantidadComentariosDetalles.setText("No hay comentarios");
 
         }
         descripcionDetalles.setText(p.getDescripcion());
 
-        String fileName = p.getPostId() + ".jpg";
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-        storageReference.child(fileName);
-        Glide.with(DetallesActivity.this)
-                .load(storageReference)
-                .into(imageDetalles);
 
+        String fileName = p.getUserUID() + "-" + p.getPostId() + ".jpg";
+        Log.d("msgxd", fileName);
+        Log.d("msgxd", "0910");
+
+        StorageReference idk = storageReference.child(fileName);
+        idk.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Glide.with(DetallesActivity.this)
+                        .load(uri)
+                        .into(imageDetalles);
+            }
+        });
     }
+
 
     public void crearRecyclerView(Post p) {
         ComentariosAdapter adapter = new ComentariosAdapter(p.getComment(), DetallesActivity.this);
