@@ -9,5 +9,12 @@
         android:icon="@drawable/ic_add"
         />
 
+    <item
+        android:id="@+id/MenuPrincipal_Logout"
+        android:title="Desconectarse"
+        app:showAsAction="always" />
+
+
+
 
 </menu>
