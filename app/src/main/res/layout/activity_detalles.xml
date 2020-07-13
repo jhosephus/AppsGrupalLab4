@@ -17,7 +17,6 @@
         android:id="@+id/userNameDetalles"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="textView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.487"
@@ -27,20 +26,18 @@
 
     <ImageView
         android:id="@+id/imageDetalles"
-        android:layout_width="129dp"
-        android:layout_height="177dp"
+        android:layout_width="257dp"
+        android:layout_height="171dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/userNameDetalles"
-        app:layout_constraintVertical_bias="0.062"
-        android:contentDescription="ImageView" />
+        app:layout_constraintVertical_bias="0.062" />
 
     <TextView
         android:id="@+id/dateDetalles"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="textView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.487"
@@ -53,7 +50,6 @@
         android:layout_width="184dp"
         android:layout_height="28dp"
         android:layout_marginBottom="92dp"
-        android:text="textView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
@@ -66,7 +62,6 @@
         android:layout_width="184dp"
         android:layout_height="28dp"
         android:layout_marginBottom="92dp"
-        android:text="textView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
@@ -88,7 +83,7 @@
         android:id="@+id/agregarComentarioDetalles"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Comentar"
+        android:text="@string/comentar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
