@@ -28,10 +28,12 @@ public class LoginActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
     private LoginButton loginButton;
     private CallbackManager mCallbackManager;
-
     private FirebaseAuth mAuth;
 
     @Override
+/*
+* Pantalla de Login con facebook.
+* */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
@@ -40,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setReadPermissions("email");
 
         mAuth = FirebaseAuth.getInstance();
-        // Callback registration
+
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -63,19 +65,23 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    /*
+    * En caso se encuentre logueado al momento de iniciar la app, debe redirigirlo a la pagina principal.
+    * */
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-
         if (currentUser != null) updateUI();
         // SI YA ESTA LOGEADO REDIRIGIRLO AL MAIN
     }
 
+    /*
+    * Handler de la sesion con facebook.
+    * */
     private void handleFacebookAccessToken(AccessToken token) {
         Log.d("msgxd", "handleFacebookAccessToken:" + token);
-
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -85,11 +91,9 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("msgxd", "signInWithCredential:success");
                             FirebaseUser currentUser = mAuth.getCurrentUser();
-
                             // REDIRIGIRLO AL MAIN.
                             if (currentUser != null) updateUI();
                             updateUI();
-
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.d("msgxd", "signInWithCredential:failure", task.getException());
@@ -105,7 +109,9 @@ public class LoginActivity extends AppCompatActivity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
     }
-
+/*
+* Intent hacia PaginaPrincipal.
+* */
     private void updateUI() {
         Log.d("msgxd", "Logueandose ... ");
         startActivity(new Intent(LoginActivity.this, PaginaPrincipal.class));
