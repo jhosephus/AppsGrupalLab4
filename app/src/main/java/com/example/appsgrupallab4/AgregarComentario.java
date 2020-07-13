@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.example.appsgrupallab4.entidades.Post;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -39,6 +40,7 @@ public class AgregarComentario extends AppCompatActivity {
 
     //Firebase
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private String userNombre;
     private String userUID;
@@ -58,7 +60,7 @@ public class AgregarComentario extends AppCompatActivity {
 
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(userNombre);
+        actionBar.setTitle(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
 
         comentario = findViewById(R.id.AgregarComentario_Comentario);
         publicar = findViewById(R.id.AgregarComentario_Publicar);
