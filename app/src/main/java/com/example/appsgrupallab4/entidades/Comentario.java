@@ -3,12 +3,12 @@ package com.example.appsgrupallab4.entidades;
 import java.util.Date;
 
 public class Comentario {
-    public Date getCurrentTime() {
-        return currentTime;
+    public Date getFechaSubida() {
+        return fechaSubida;
     }
 
-    public void setCurrentTime(Date currentTime) {
-        this.currentTime = currentTime;
+    public void setFechaSubida(Date fechaSubida) {
+        this.fechaSubida = fechaSubida;
     }
 
     public String getNombreUser() {
@@ -35,8 +35,18 @@ public class Comentario {
         this.userUID = userUID;
     }
 
-    private Date currentTime;
+    private Date fechaSubida;
     private String nombreUser;
     private String contenido;
     private String userUID;
+
+    public String getComentarioID() {
+        return comentarioID;
+    }
+
+    public void setComentarioID(String comentarioID) {
+        this.comentarioID = comentarioID;
+    }
+
+    private String comentarioID;
 }

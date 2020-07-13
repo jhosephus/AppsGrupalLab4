@@ -8,14 +8,6 @@ import java.util.Date;
 
 public class Post implements Serializable {
 
-    private String postId;
-    private String nombreUser;
-    private String userUID;
-    private Date fechaSubida;
-    private String stringDate;
-    private String descripcion;
-    private ArrayList<Comentario> comment;
-
     public String getPostId() {
         return postId;
     }
@@ -44,8 +36,8 @@ public class Post implements Serializable {
         return fechaSubida;
     }
 
-    public void setFechaSubida(Date date) {
-        this.fechaSubida = date;
+    public void setFechaSubida(Date fechaSubida) {
+        this.fechaSubida = fechaSubida;
     }
 
     public String getStringDate() {
@@ -64,11 +56,20 @@ public class Post implements Serializable {
         this.descripcion = descripcion;
     }
 
-    public ArrayList<Comentario> getComment() {
-        return comment;
+    public ArrayList<Comentario> getComentarios() {
+        return comentarios;
     }
 
-    public void setComment(ArrayList<Comentario> comment) {
-        this.comment = comment;
+    public void setComentarios(ArrayList<Comentario> comentarios) {
+        this.comentarios = comentarios;
     }
+
+    private String postId;
+    private String nombreUser;
+    private String userUID;
+    private Date fechaSubida;
+    private String stringDate;
+    private String descripcion;
+    private ArrayList<Comentario> comentarios;
+
 }
