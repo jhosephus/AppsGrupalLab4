@@ -27,6 +27,7 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ImageVie
     private ArrayList<String> comentario;
     private ArrayList<String> usuario;
     private ArrayList<String> imagen;
+    private ArrayList<String> nombreUsuario;
     private Context context;
 
 
@@ -34,10 +35,11 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ImageVie
     StorageReference storageReference;
     FirebaseStorage storage = FirebaseStorage.getInstance();
 
-    public RecycleAdapter(ArrayList<String> comentario, ArrayList<String> usuario, ArrayList<String> imagen, Context context, OnNoteListener onNoteListener) {
+    public RecycleAdapter(ArrayList<String> comentario, ArrayList<String> usuario, ArrayList<String> imagen, ArrayList<String> nombreUsuario, Context context, OnNoteListener onNoteListener) {
         this.context = context;
         this.comentario = comentario;
         this.usuario = usuario;
+        this.nombreUsuario = nombreUsuario;
         this.imagen = imagen;
         this.onNoteListener = onNoteListener;
 
@@ -70,7 +72,7 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ImageVie
         });
 
 
-        holder.textView1.setText(usuario.get(position));
+        holder.textView1.setText(nombreUsuario.get(position));
         holder.textView2.setText(comentario.get(position));
 
 

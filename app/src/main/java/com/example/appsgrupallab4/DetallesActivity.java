@@ -1,5 +1,7 @@
 package com.example.appsgrupallab4;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,16 +16,21 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.appsgrupallab4.Adapters.ComentariosAdapter;
 import com.example.appsgrupallab4.entidades.Comentario;
 import com.example.appsgrupallab4.entidades.Post;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -37,6 +44,7 @@ public class DetallesActivity extends AppCompatActivity {
 
     final int START_ACTIVITY_CODE = 2;
     private FirebaseFirestore fireStore;
+    FirebaseFirestore db;
     private StorageReference storageReference;
     FirebaseStorage storage;
 
@@ -58,11 +66,15 @@ public class DetallesActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser user;
 
+    private ActionBar actionBar;
+
+    Comentario comentario = new Comentario();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalles);
+
         Log.d("msgxd", "aea");
 
         storage = FirebaseStorage.getInstance();
@@ -81,7 +93,7 @@ public class DetallesActivity extends AppCompatActivity {
 
         Log.d("msgxd", post.getDescripcion());
         llenarCampos((Post) post);
-        crearRecyclerView((Post) post);
+        setActivity((Post) post);
 
 
         findViewById(R.id.agregarComentarioDetalles).setOnClickListener(new View.OnClickListener() {
@@ -112,18 +124,43 @@ public class DetallesActivity extends AppCompatActivity {
         descripcionDetalles = findViewById(R.id.descripcionDetalles);
 
         userNameDetalles.setText(p.getNombreUser());
-        //imageDetalles.setText("");
 
 
         String fechaParsed = new SimpleDateFormat("dd/MM/yyyy").format(p.getFechaSubida());
         dateDetalles.setText(fechaParsed);
 
-        if (p.getComment() != null) {
-            cantidadComentariosDetalles.setText("Cantidad de comentarios" + p.getComment().size());
-        } else {
-            cantidadComentariosDetalles.setText("No hay comentarios");
+        Log.d("msgxd", "estoyaca");
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+        db = FirebaseFirestore.getInstance();
+        String collectionComentariosPath = "posts/" + p.getPostId() + "/comentarios";
 
-        }
+        Log.d("msgxd", "estoyaca2");
+        db.collection(collectionComentariosPath).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                Log.d("msgxd", "estoyaca3");
+                if (task.isSuccessful()) {
+                    ArrayList<Comentario> listaComentarios = new ArrayList<>();
+                    for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                        comentario = documentSnapshot.toObject(Comentario.class);
+                        comentario.setComentarioID(documentSnapshot.getId());
+                        listaComentarios.add(comentario);
+
+                        Log.d("msgxd", "estoyaca4");
+                    }
+                    if (listaComentarios.size() > 0) {
+                        Log.d("msgxd", "estoyaca5");
+                        cantidadComentariosDetalles.setText("Cantidad de comentarios: " + listaComentarios.size());
+                        crearRecyclerView(listaComentarios);
+                    } else {
+                        cantidadComentariosDetalles.setText("No hay comentarios");
+                    }
+                }
+            }
+        });
+
+
         descripcionDetalles.setText(p.getDescripcion());
 
 
@@ -142,39 +179,21 @@ public class DetallesActivity extends AppCompatActivity {
         });
     }
 
+    public void setActivity(Post p) {
+        mAuth = FirebaseAuth.getInstance();
+        actionBar = getSupportActionBar();
+        actionBar.setTitle(p.getNombreUser());
 
-    public void crearRecyclerView(Post p) {
-        ComentariosAdapter adapter = new ComentariosAdapter(p.getComment(), DetallesActivity.this);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
+
+    }
+
+    public void crearRecyclerView(ArrayList<Comentario> listaComentarios) {
+        ComentariosAdapter adapter = new ComentariosAdapter(listaComentarios, DetallesActivity.this);
         rv = findViewById(R.id.recyclerComentariosDetalles);
         rv.setAdapter(adapter);
         rv.setLayoutManager(new LinearLayoutManager(DetallesActivity.this));
 
     }
 }
-/*
-    public void getComentarios(final Post p, final Callback callback) {
-        String postId = p.getPostId();
-
-        //String pathPost = "posts/" + postId + "/comentarios/";
-
-
-        fireStore.collection("post").document(postId).collection("comentarios").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            ArrayList<Comentario> listaComentarios = p.getComment();
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("msgxd", document.getId() + " => " + document.getData());
-                                Comentario c = document.toObject(Comentario.class);
-                                listaComentarios.add(c);
-                            }
-                            callback.onSuccess(listaComentarios);
-                        } else {
-                            Log.d("msgxd", "Error getting documents: ", task.getException());
-
-                        }
-                    }
-                });
-    }
-*/

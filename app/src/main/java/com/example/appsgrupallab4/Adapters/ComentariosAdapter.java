@@ -13,6 +13,7 @@ import com.example.appsgrupallab4.DetallesActivity;
 import com.example.appsgrupallab4.R;
 import com.example.appsgrupallab4.entidades.Comentario;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class ComentariosAdapter extends RecyclerView.Adapter<ComentariosAdapter.ComentariosViewHolder> {
@@ -50,8 +51,9 @@ public class ComentariosAdapter extends RecyclerView.Adapter<ComentariosAdapter.
 
     public void onBindViewHolder(ComentariosViewHolder holder, int position) {
         Comentario c = listaComentarios.get(position);
-        holder.comentarioDate.setText(c.getContenido());
-        holder.comentarioDate.setText(c.getCurrentTime().toString());
+        String fechaParsed = new SimpleDateFormat("dd/MM/yyyy").format(c.getFechaSubida());
+        holder.comentarioBody.setText(c.getContenido());
+        holder.comentarioDate.setText(fechaParsed);
 
     }
 

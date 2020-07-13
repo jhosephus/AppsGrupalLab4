@@ -17,9 +17,12 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.appsgrupallab4.entidades.Post;
+import com.facebook.login.Login;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -37,6 +40,7 @@ public class PaginaPrincipal extends AppCompatActivity implements RecycleAdapter
     RecyclerView recyclerView;
     RecycleAdapter recycleAdapter;
     ArrayList<String> comentario = new ArrayList<String>();
+    ArrayList<String> nombreUsuario = new ArrayList<String>();
     ArrayList<String> usuario = new ArrayList<String>();
     ArrayList<String> imagen = new ArrayList<String>();
     File fileDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
@@ -64,8 +68,9 @@ public class PaginaPrincipal extends AppCompatActivity implements RecycleAdapter
                         postAux = documentSnapshot.toObject(Post.class);
                         postAux.setPostId(documentSnapshot.getId());
                         posts.add(postAux);
+
                     }
-                    comoseteantoje();
+                    fillInfo();
                 }
             }
         });
@@ -73,15 +78,19 @@ public class PaginaPrincipal extends AppCompatActivity implements RecycleAdapter
 
     }
 
-    public void comoseteantoje() {
+    /*
+     * Pasar información del recylcler view.
+     * */
+    public void fillInfo() {
         sais = posts.size();
         for (int i = 0; i < sais; i++) {
             imagen.add(posts.get(i).getUserUID() + "-" + posts.get(i).getPostId());
             usuario.add(posts.get(i).getUserUID());
+            nombreUsuario.add(posts.get(i).getNombreUser());
             comentario.add(posts.get(i).getDescripcion());
         }
 
-        recycleAdapter = new RecycleAdapter(comentario, usuario, imagen, PaginaPrincipal.this, (RecycleAdapter.OnNoteListener) PaginaPrincipal.this);
+        recycleAdapter = new RecycleAdapter(comentario, usuario, imagen, nombreUsuario, PaginaPrincipal.this, (RecycleAdapter.OnNoteListener) PaginaPrincipal.this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         recyclerView.setOnClickListener(new View.OnClickListener() {
@@ -94,19 +103,20 @@ public class PaginaPrincipal extends AppCompatActivity implements RecycleAdapter
         Log.d("sais", String.valueOf(sais));
     }
 
+    /*
+     * Al mostrar más detalles se le envía el objeto Post a DetallesActivity.
+     * */
     @Override
     public void onNoteClick(int position) {
         Intent intent = new Intent(PaginaPrincipal.this, DetallesActivity.class);
         intent.putExtra("post", posts.get(position));
-
-        /*intent.putExtra("usuario", usuario.get(position));
-        intent.putExtra("imagen",imagen.get(position));
-        intent.putExtra("descripcion",comentario.get(position));
-        */
         startActivityForResult(intent, 1);
 
     }
 
+    /*
+     * Inflar el recycler view.
+     * */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_principal, menu);
@@ -117,11 +127,17 @@ public class PaginaPrincipal extends AppCompatActivity implements RecycleAdapter
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.MenuPrincipal_SubirFoto:
-                Intent intent = new Intent(PaginaPrincipal.this,SubirFoto.class);
+                Intent intent = new Intent(PaginaPrincipal.this, SubirFoto.class);
                 startActivityForResult(intent, SubirFoto_RequestCode);
                 break;
+            case R.id.MenuPrincipal_Logout:
+                FirebaseAuth.getInstance().signOut();
+                LoginManager.getInstance().logOut();
+                Intent intentLogout = new Intent(this, Login.class);
+                startActivityForResult(intentLogout, 1);
+
             default:
                 break;
 
@@ -134,8 +150,8 @@ public class PaginaPrincipal extends AppCompatActivity implements RecycleAdapter
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == RESULT_OK){
-            switch (requestCode){
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
                 case SubirFoto_RequestCode:
                     break;
                 default:

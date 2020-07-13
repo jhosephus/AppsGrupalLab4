@@ -3,7 +3,13 @@ package com.example.appsgrupallab4;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -31,9 +37,9 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     @Override
-/*
-* Pantalla de Login con facebook.
-* */
+    /*
+     * Pantalla de Login con facebook.
+     * */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
@@ -43,31 +49,33 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                // App code
-                Log.d("msgxd", "Login ok");
-                handleFacebookAccessToken(loginResult.getAccessToken());
+        if (isInternetAvailable()) {
+            loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                @Override
+                public void onSuccess(LoginResult loginResult) {
+                    // App code
+                    Log.d("msgxd", "Login ok");
+                    handleFacebookAccessToken(loginResult.getAccessToken());
 
-            }
+                }
 
-            @Override
-            public void onCancel() {
-                // App code
-            }
+                @Override
+                public void onCancel() {
+                    // App code
+                }
 
-            @Override
-            public void onError(FacebookException error) {
+                @Override
+                public void onError(FacebookException error) {
 
-            }
+                }
 
-        });
+            });
+        }
     }
 
     /*
-    * En caso se encuentre logueado al momento de iniciar la app, debe redirigirlo a la pagina principal.
-    * */
+     * En caso se encuentre logueado al momento de iniciar la app, debe redirigirlo a la pagina principal.
+     * */
     @Override
     public void onStart() {
         super.onStart();
@@ -78,8 +86,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /*
-    * Handler de la sesion con facebook.
-    * */
+     * Handler de la sesion con facebook.
+     * */
     private void handleFacebookAccessToken(AccessToken token) {
         Log.d("msgxd", "handleFacebookAccessToken:" + token);
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
@@ -109,12 +117,49 @@ public class LoginActivity extends AppCompatActivity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
     }
-/*
-* Intent hacia PaginaPrincipal.
-* */
+
+    /*
+     * Intent hacia PaginaPrincipal.
+     * */
     private void updateUI() {
         Log.d("msgxd", "Logueandose ... ");
         startActivity(new Intent(LoginActivity.this, PaginaPrincipal.class));
 
     }
+
+    public boolean isInternetAvailable() {
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if (connectivityManager == null) return false;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Network networks = connectivityManager.getActiveNetwork();
+            if (networks == null) return false;
+
+            NetworkCapabilities networkCapabilities = connectivityManager.getNetworkCapabilities(networks);
+            if (networkCapabilities == null) return false;
+
+            if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) return true;
+            if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR))
+                return true;
+            if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET))
+                return true;
+            return false;
+
+
+        } else {
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            if (activeNetworkInfo == null) return false;
+
+            if (activeNetworkInfo.getType() == ConnectivityManager.TYPE_WIFI) return true;
+            if (activeNetworkInfo.getType() == ConnectivityManager.TYPE_MOBILE) return true;
+            if (activeNetworkInfo.getType() == ConnectivityManager.TYPE_ETHERNET) return true;
+            return true;
+        }
+
+
+    }
+
+
 }
