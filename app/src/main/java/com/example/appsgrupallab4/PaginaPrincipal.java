@@ -57,6 +57,9 @@ public class PaginaPrincipal extends AppCompatActivity implements RecycleAdapter
                     for (DocumentSnapshot documentSnapshot : task.getResult()) {
                         postAux = documentSnapshot.toObject(Post.class);
                         postAux.setPostId(documentSnapshot.getId());
+                        Log.d("uid",postAux.getUserUID());
+                        Log.d("user",postAux.getNombreUser());
+                        Log.d("nanme",postAux.getPostId());
                         posts.add(postAux);
                     }
                     comoseteantoje();

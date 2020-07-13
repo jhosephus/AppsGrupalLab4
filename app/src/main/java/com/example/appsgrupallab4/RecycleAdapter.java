@@ -59,6 +59,7 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ImageVie
         storageReference = storage.getReference();
 
         final StorageReference nose = storageReference.child(imagen.get(position) + ".jpg");
+
         nose.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
