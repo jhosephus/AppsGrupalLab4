@@ -2,12 +2,19 @@ package com.example.appsgrupallab4;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -38,6 +45,7 @@ public class SubirFoto extends AppCompatActivity {
 
     private boolean isFoto = false;
     private boolean isTexto = false;
+    private ActionBar actionBar;
 
     //Form
     private EditText descripcion;
@@ -62,6 +70,10 @@ public class SubirFoto extends AppCompatActivity {
 
     public void setActivity() {
 
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("Daniel");
+
         descripcion = findViewById(R.id.SubirFoto_Descripcion);
         galeria = findViewById(R.id.SubirFoto_Galeria);
         foto = findViewById(R.id.SubirFoto_Foto);
@@ -83,20 +95,25 @@ public class SubirFoto extends AppCompatActivity {
 
     }
 
-    public void cargarGaleria() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
+    public void cargarGaleria () {
+        Intent intent=new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         String[] mimeTypes = {"image/jpeg", "image/png"};
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
-        startActivityForResult(intent, GALLERY_REQUEST_CODE);
+        intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
+        startActivityForResult(intent,GALLERY_REQUEST_CODE);
     }
 
-    public void publicarPost() {
+    public void publicarPost () {
 
         isTexto = !descripcion.getText().toString().isEmpty();
 
-        if (isTexto && isFoto) {
-            uploadInfo();
+        if (isInternetAvailable()){
+            if (isTexto && isFoto){
+                uploadInfo();
+            }
+        }
+        else {
+            Toast.makeText(SubirFoto.this, "Sin Internet", Toast.LENGTH_LONG).show();
         }
 
     }
@@ -137,23 +154,23 @@ public class SubirFoto extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Toast.makeText(SubirFoto.this, "Publicado", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SubirFoto.this,"Publicado",Toast.LENGTH_SHORT).show();
                         String fotoUID;
                         //fotoUID = currentUser.getUid() +"-"+documentReference.getId();
-                        fotoUID = "1452" + "-" + documentReference.getId();
+                        fotoUID = "1452" +"-"+documentReference.getId();
                         uploadImage(fotoUID);
                     }
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(SubirFoto.this, "Ocurrio algo", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(SubirFoto.this,"Ocurrio algo",Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
-    private void uploadImage(final String idFoto) {
+    private void uploadImage(final String idFoto){
         storageRef = storage.getReference();
         mountainsRef = storageRef.child(idFoto + ".jpg");
         // Get the data from an ImageView as bytes
@@ -169,26 +186,59 @@ public class SubirFoto extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 // Handle unsuccessful uploads
-                Toast.makeText(SubirFoto.this, "Fail", Toast.LENGTH_LONG).show();
+                Toast.makeText(SubirFoto.this,"Fail",Toast.LENGTH_LONG).show();
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Map<String, Object> infoFoto = new HashMap<>();
+                Map<String,Object> infoFoto = new HashMap<>();
                 infoFoto.put("idFoto", idFoto);
                 db.collection("incidencias").document(idFoto)
                         .update(infoFoto)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Toast.makeText(SubirFoto.this, "Success", Toast.LENGTH_LONG).show();
+                                Toast.makeText(SubirFoto.this,"Success",Toast.LENGTH_LONG).show();
                                 Intent intent = new Intent();
-                                setResult(RESULT_OK, intent);
+                                setResult(RESULT_OK,intent);
                                 //finish();
                             }
                         });
             }
         });
+    }
+
+    public boolean isInternetAvailable() {
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if (connectivityManager == null) return false;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            Network networks = connectivityManager.getActiveNetwork();
+            if (networks == null) return false;
+
+            NetworkCapabilities networkCapabilities = connectivityManager.getNetworkCapabilities(networks);
+            if (networkCapabilities == null) return false;
+
+            if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) return true;
+            if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) return true;
+            if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) return true;
+            return false;
+
+
+        }
+        else {
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            if (activeNetworkInfo == null) return false;
+
+            if (activeNetworkInfo.getType() == ConnectivityManager.TYPE_WIFI) return true;
+            if (activeNetworkInfo.getType() == ConnectivityManager.TYPE_MOBILE) return true;
+            if (activeNetworkInfo.getType() == ConnectivityManager.TYPE_ETHERNET) return true;
+            return true;
+        }
+
+
     }
 
 }

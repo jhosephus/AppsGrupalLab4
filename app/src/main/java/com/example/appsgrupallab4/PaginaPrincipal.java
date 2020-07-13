@@ -1,6 +1,7 @@
 package com.example.appsgrupallab4;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,6 +12,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.example.appsgrupallab4.entidades.Post;
@@ -41,6 +44,9 @@ public class PaginaPrincipal extends AppCompatActivity implements RecycleAdapter
     Post postAux = new Post();
     int sais;
     Context context;
+
+    private static final int SubirFoto_RequestCode = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,5 +107,41 @@ public class PaginaPrincipal extends AppCompatActivity implements RecycleAdapter
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_principal, menu);
 
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.MenuPrincipal_SubirFoto:
+                Intent intent = new Intent(PaginaPrincipal.this,SubirFoto.class);
+                startActivityForResult(intent, SubirFoto_RequestCode);
+                break;
+            default:
+                break;
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == RESULT_OK){
+            switch (requestCode){
+                case SubirFoto_RequestCode:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    }
 }
